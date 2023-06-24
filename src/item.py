@@ -1,6 +1,4 @@
 import csv
-from src.csv import CSV_PATH
-from src.work_csv import InstantiateCSVError
 
 
 class Item:
@@ -77,24 +75,9 @@ class Item:
         return int(float(value))
 
     @classmethod
-    @classmethod
-    def instantiate_from_csv(cls, path=CSV_PATH) -> None:
-        """
-        Инициализирует экземпляры класса Item данными из CSV-файла.
-
-        Файл должен содержать строки с данными в формате: "name,price,quantity".
-
-        :param path: Путь к CSV-файлу. По умолчанию используется ITEMS_CSV_PATH.
-        :raises: FileNotFoundError, если файл items.csv не найден.
-        :raises: InstantiateCSVError, если файл item.csv поврежден.
-        """
+    def instantiate_from_csv(cls):
         cls.all.clear()
-        try:
-            with open(path, 'r', encoding='windows-1251') as file:
-                file_reader = csv.DictReader(file, delimiter=',')
-                for row in file_reader:
-                    if 'name' not in row or 'price' not in row or 'quantity' not in row:
-                        raise InstantiateCSVError()
-                    cls(row['name'], float(row['price']), int(row['quantity']))
-        except FileNotFoundError:
-            raise FileNotFoundError("Отсутствует файл items.csv")
+        with open('../src/items.csv', 'r', encoding='windows-1251') as file:
+            file_reader = csv.DictReader(file)
+            for row in file_reader:
+                cls(row['name'], float(row['price']), int(row['quantity']))
