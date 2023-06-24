@@ -1,20 +1,28 @@
+import csv
+from src.csv import CSV_PATH
+from src.work_csv import InstantiateCSVError
+
+
 class Item:
+    """
+    Класс для представления товара в магазине.
+    """
     pay_rate = 1.0
     all = []
 
-    def __init__(self, name: str, price, quantity: int) -> None:
-        '''
-         Создание экземпляров Item
-        '''
-        self.name = name
-        self.price = price
-        self.quantity = quantity
+    def __init__(self, name: str, price: float, quantity: int) -> None:
+        """
+        экземпляра класса item.
+        """
+        self.__name = name
+        self.__price = price
+        self.__quantity = quantity
         self.all.append(self)
 
     @property
     def name(self) -> str:
         """
-        Получает название товара
+        Название товара.
         """
         return self.__name
 
@@ -27,20 +35,36 @@ class Item:
         """
         self.__name = value if len(value) <= 10 else value[:10]
 
+    @property
+    def price(self) -> float:
+        """
+        Получает количество товара в магазине.
+
+        """
+        return self.__price
+
+    @property
+    def quantity(self) -> int:
+        """
+        Получает цену за единицу товара.
+
+        :return: Цена за единицу товара.
+        """
+        return self.__quantity
+
     def calculate_total_price(self) -> float:
-        '''
-        Возвращение общей стоимости
-        '''
-        return self.price * self.quantity
+        """
+        Рассчитывает общую стоимость конкретного товара в магазине.
+
+        :return: Общая стоимость товара.
+        """
+        return self.price * self.__quantity
 
     def apply_discount(self) -> None:
         """
         Применяет установленную скидку для конкретного товара.
         """
-        self.price *= self.pay_rate
-
-    def private_name(self):
-        print(self.name)
+        self.__price *= self.pay_rate
 
     @staticmethod
     def string_to_number(value: str) -> int:
@@ -53,14 +77,24 @@ class Item:
         return int(float(value))
 
     @classmethod
-    def instantiate_from_csv(cls) -> None:
+    @classmethod
+    def instantiate_from_csv(cls, path=CSV_PATH) -> None:
         """
         Инициализирует экземпляры класса Item данными из CSV-файла.
 
         Файл должен содержать строки с данными в формате: "name,price,quantity".
+
+        :param path: Путь к CSV-файлу. По умолчанию используется ITEMS_CSV_PATH.
         :raises: FileNotFoundError, если файл items.csv не найден.
         :raises: InstantiateCSVError, если файл item.csv поврежден.
-     """
-
-
-
+        """
+        cls.all.clear()
+        try:
+            with open(path, 'r', encoding='windows-1251') as file:
+                file_reader = csv.DictReader(file, delimiter=',')
+                for row in file_reader:
+                    if 'name' not in row or 'price' not in row or 'quantity' not in row:
+                        raise InstantiateCSVError()
+                    cls(row['name'], float(row['price']), int(row['quantity']))
+        except FileNotFoundError:
+            raise FileNotFoundError("Отсутствует файл items.csv")
