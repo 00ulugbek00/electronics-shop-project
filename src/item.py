@@ -17,6 +17,12 @@ class Item:
         self.__quantity = quantity
         self.all.append(self)
 
+    def __repr__(self):
+        return f'{self.__class__.__name__},{self.name},{self.price},{self.__quantity}'
+
+    def __str__(self):
+        return self.__name
+
     @property
     def name(self) -> str:
         """
@@ -81,5 +87,3 @@ class Item:
             file_reader = csv.DictReader(file)
             for row in file_reader:
                 cls(row['name'], float(row['price']), int(row['quantity']))
-
-
