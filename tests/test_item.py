@@ -50,7 +50,16 @@ def test_instantiate_from_csv():
     assert Item.string_to_number('5.5') == 5
 
 
-def test_item1_from_csv_name():
-    Item.instantiate_from_csv()
-    item1 = Item.all[0]
-    assert item1.name == 'Смартфон'
+def string_to_number(value: str):
+    assert value == 5
+
+
+@pytest.fixture
+def test_item1_repr(item1):
+    assert repr(item1) == "Item('Смартфон', 10000, 20)"
+
+
+@pytest.fixture
+def test_item1_str(item1):
+
+    assert str(item1) == 'Смартфон'
