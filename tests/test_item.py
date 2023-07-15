@@ -61,5 +61,9 @@ def test_item1_repr(item1):
 
 @pytest.fixture
 def test_item1_str(item1):
-
     assert str(item1) == 'Смартфон'
+
+
+def test_instantiate_from_csv_error():
+    assert Item.instantiate_from_csv("text.txt") == "Отсутствует файл text.txt"
+    # assert Item.instantiate_from_csv('../poetry.lock') == "Файл ../poetry.lock поврежден"
