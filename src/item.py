@@ -59,7 +59,7 @@ class Item:
         return int(value)
 
     @classmethod
-    def instantiate_from_csv(cls, filename) -> str:
+    def instantiate_from_csv(cls, filename='../src/items.cvs') -> str:
         """
         класс-метод, инициализирующий экземпляры класса `Item` данными из файла _src/items.csv_
         """
